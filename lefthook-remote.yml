@@ -1,0 +1,10 @@
+---
+pre-commit:
+  commands:
+    git-conflict-markers:
+      run: timeout ${LEFTHOOK_GIT_CONFLICT_MARKERS_TIMEOUT:-30} lefthook-git-conflict-markers {staged_files}
+
+pre-push:
+  commands:
+    git-conflict-markers:
+      run: timeout ${LEFTHOOK_GIT_CONFLICT_MARKERS_TIMEOUT:-30} lefthook-git-conflict-markers {push_files}
