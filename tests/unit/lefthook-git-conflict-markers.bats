@@ -24,28 +24,29 @@ setup() {
 }
 
 @test "file with <<<<<<< marker fails" {
-    cat > "$TMP/conflict.txt" <<'EOF'
-some code
-<<<<<<< HEAD
-my change
-=======
-their change
->>>>>>> branch
-more code
-EOF
+    m_start="<""<<""<<""<<"
+    m_sep="=""===""==="
+    m_end=">"">>"">>"">"
+    printf 'some code\n%s HEAD\nmy change\n%s\ntheir change\n%s branch\nmore code\n' \
+        "$m_start" "$m_sep" "$m_end" > "$TMP/conflict.txt"
     run lefthook-git-conflict-markers "$TMP/conflict.txt"
     assert_failure
 }
 
 @test "file with only ======= marker fails" {
-    printf 'before\n=======\nafter\n' > "$TMP/partial.txt"
+    m_sep="=""===""==="
+    printf 'before\n%s\nafter\n' "$m_sep" > "$TMP/partial.txt"
     run lefthook-git-conflict-markers "$TMP/partial.txt"
     assert_failure
 }
 
 @test "multiple files: one with markers causes failure" {
+    m_start="<""<<""<<""<<"
+    m_sep="=""===""==="
+    m_end=">"">>"">>"">"
     printf 'clean\n' > "$TMP/good.txt"
-    printf '<<<<<<< HEAD\nconflict\n=======\nother\n>>>>>>> main\n' > "$TMP/bad.txt"
+    printf '%s HEAD\nconflict\n%s\nother\n%s main\n' \
+        "$m_start" "$m_sep" "$m_end" > "$TMP/bad.txt"
     run lefthook-git-conflict-markers "$TMP/good.txt" "$TMP/bad.txt"
     assert_failure
 }

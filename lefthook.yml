@@ -49,12 +49,10 @@ pre-commit:
   parallel: true
   commands:
     git-conflict-markers:
-      exclude: '.*\.bats$'
       run: timeout ${LEFTHOOK_GIT_CONFLICT_MARKERS_TIMEOUT:-30} lefthook-git-conflict-markers {staged_files}
 
 pre-push:
   parallel: true
   commands:
     git-conflict-markers:
-      exclude: '.*\.bats$'
       run: timeout ${LEFTHOOK_GIT_CONFLICT_MARKERS_TIMEOUT:-30} lefthook-git-conflict-markers {push_files}
